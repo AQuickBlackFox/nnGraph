@@ -23,7 +23,8 @@ class Tensor:
     def forward(self):
         return self.val
     def backward(self, val, lrate):
-        print val
+        return
+        #print val
 
 class Weight:
     def __init__(self, val):
@@ -75,11 +76,14 @@ if __name__ == '__main__':
     W0 = Weight(w0)
     W1 = Weight(w1)
     Z = Add(Mul(W0, X0), Mul(W1, X1))
-    lrate = 0.01
+    lrate = 1e-4
     print y
     for i in range(1000):
+        np.random.shuffle(x0)
+        np.random.shuffle(x1)
         s = Z.forward()
         diff = s - y
-        print "Loss: ", (0.5*np.square(diff)).sum()
-        Z.backward(diff, 1e-4)
-        print W0.val, W1.val
+        if i == 1000-1:
+            print "Loss: ", (0.5*np.square(diff)).sum()
+        Z.backward(diff, lrate)
+    print W0.val, W1.val
